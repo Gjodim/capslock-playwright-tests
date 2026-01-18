@@ -1,11 +1,16 @@
-import test from "@playwright/test"
+import { LandingPage } from "../../pages/landingPage";
+import test from "@playwright/test";
 
-test.describe('Visit and verify access to Capslock Global Landing page', async() => {
-    
-    test('Visit and verify access to Capslock Global Landing page', {tag: ['@smoke', '@landingPage']}, async() => {
-        
-        await test.step('When i visit the Capslock Global Landing page', async() => {
-            
-        })
-    })
-})
+test.describe("Visit and verify access to Capslock Global Landing page", async () => {
+  test(
+    "Visit and verify access to Capslock Global Landing page",
+    { tag: ["@smoke", "@landingPage"] },
+    async ({ page }) => {
+      const landingPage = new LandingPage(page);
+
+      await landingPage.navigate();
+      await landingPage.verifyUrl();
+      await landingPage.verifyInitialPageElements();
+    }
+  );
+});
