@@ -43,7 +43,7 @@ export class LandingPage extends BasePage {
   private sectionFormPhone: Locator;
   private phoneInputField: Locator;
   private phoneSubmitRequestButton: Locator;
-  private phoneNumberValidation: Locator
+  private phoneNumberValidation: Locator;
 
   private sectionFormTwo: Locator;
 
@@ -164,12 +164,12 @@ export class LandingPage extends BasePage {
       name: "Submit Your Request",
     });
     this.phoneNumberValidation = this.sectionFormPhone
-    .locator(".helpBlock", { hasText: "Wrong phone number." })
-    .or(
-      this.sectionFormPhone.locator(".helpBlock", {
-        hasText: "Enter your phone number.",
-      })
-    );
+      .locator(".helpBlock", { hasText: "Wrong phone number." })
+      .or(
+        this.sectionFormPhone.locator(".helpBlock", {
+          hasText: "Enter your phone number.",
+        })
+      );
 
     this.sectionFormTwo = page.locator(".section_form").last();
   }
@@ -228,6 +228,10 @@ export class LandingPage extends BasePage {
 
   async verifySectionFormSorryEmailSent() {
     await expect(this.sectionFormSorryThankYouText).toBeVisible();
+  }
+
+  async verifySectionFormSorryEmailNotSent() {
+    await expect.soft(this.sectionFormSorryThankYouText).not.toBeVisible();
   }
 
   async verifySectionFormWhyInterested() {
@@ -302,41 +306,41 @@ export class LandingPage extends BasePage {
   async verifyPhoneValidation() {
     await expect.soft(this.phoneNumberValidation).toBeVisible();
     //console.log(this.phoneNumberValidation.textContent());
-  } 
+  }
 
-//   async getEmailValidationMessage(): Promise<string> {
-//     return await this.nameAndEmailEmailInput.evaluate(
-//       (el) => (el as HTMLInputElement).validationMessage
-//     );
-//   }
+  //   async getEmailValidationMessage(): Promise<string> {
+  //     return await this.nameAndEmailEmailInput.evaluate(
+  //       (el) => (el as HTMLInputElement).validationMessage
+  //     );
+  //   }
 
-//   async isEmailFieldValid(): Promise<boolean> {
-//     return await this.nameAndEmailEmailInput.evaluate((el) =>
-//       (el as HTMLInputElement).checkValidity()
-//     );
-//   }
+  //   async isEmailFieldValid(): Promise<boolean> {
+  //     return await this.nameAndEmailEmailInput.evaluate((el) =>
+  //       (el as HTMLInputElement).checkValidity()
+  //     );
+  //   }
 
-async verifyEmailFieldHTML5Validation() {
-    // 1. Hard assertions for the static attributes
+  async verifyEmailFieldHTML5Validation(outOfService?: boolean) {
+    const emailInput = outOfService
+      ? this.sectionFormSorryEmailInput
+      : this.nameAndEmailEmailInput;
+
     await expect(this.nameAndEmailEmailInput).toHaveAttribute("type", "email");
     await expect(this.nameAndEmailEmailInput).toHaveAttribute("required");
 
-    // 2. Check validity and message in a single execution context
     const validation = await this.nameAndEmailEmailInput.evaluate((el) => {
       const input = el as HTMLInputElement;
       return {
         isValid: input.reportValidity(),
-        message: input.validationMessage
+        message: input.validationMessage,
       };
     });
 
-    // 3. Assertions
-    expect(validation.isValid).toBe(false);
-    expect(validation.message).not.toBe("");
-    
-    console.log(`Validation Message: ${validation.message}`);
-}
+    expect.soft(validation.isValid).toBe(false);
+    expect.soft(validation.message).not.toBe("");
 
+    console.log(`Validation Message: ${validation.message}`);
+  }
 
   async verifySectionPhoneFormNotVisible() {
     await expect.soft(this.sectionFormPhone).not.toBeVisible();
