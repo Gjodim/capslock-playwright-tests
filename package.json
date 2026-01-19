@@ -3,7 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "npx playwright test",
+    "test:chrome": "npx playwright test --project=chromium",
+    "test:chrome:headed": "npx playwright test --project=chromium --headed",
+    "test:chrome:mobile": "npx playwright test --project=chromium-mobile",
+    "test:e2e:chrome": "npx playwright test --project=chromium --grep @e2e",
+    "test:grep": "npx playwright test --grep",
+    "test:ui": "npx playwright test --ui",
+    "test:debug": "npx playwright test --debug",
+    "test:report": "npx playwright show-report"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

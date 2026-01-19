@@ -3,7 +3,7 @@ import { data } from "../../data/test-data";
 import { test } from "../fixtures/landingPage.fixture";
 
 test.describe("Verify form submission", async () => {
-  test("Form success for out of service ZIP code", async ({ landingPage }) => {
+  test("Form success for out of service ZIP code", { tag: ["@e2e", "@landingPage"] }, async ({ landingPage }) => {
     await landingPage.typeInZipField(data.zipCodes.validOutOfService.OUA_11111);
     await landingPage.clickNextButton();
 
@@ -16,7 +16,7 @@ test.describe("Verify form submission", async () => {
     await landingPage.verifySectionFormSorryEmailSent();
   });
 
-  test("Form success for service available ZIP code", async ({
+  test("Form success for service available ZIP code", { tag: ["@e2e", "@landingPage"] }, async ({
     landingPage,
     page,
   }) => {
