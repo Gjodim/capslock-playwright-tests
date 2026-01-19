@@ -11,7 +11,7 @@ export const data = {
     },
 
     invalid: {
-      EMPTY: "",
+      empty: "",
       tooShort: "123",
       tooLong: "123456",
       nonUmeric: "ABcDe",
@@ -22,19 +22,23 @@ export const data = {
   emailAddress: {
     valid: {
       validOne: "test@test.com",
+      validTwo: "johnDoe@test.com",
+      // This may be considered a standard email address according to HTML5 validation
+      // Might be good use case to fix (e.g. using a pattern in the HTML element: pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")
+      noDomain: "test@test",
     },
 
     invalid: {
+      empty: "",
       noUsername: "@test.com",
       noServer: "test@.com",
       noSymbol: "testtest.com",
-      noDomain: "test@test",
     },
   },
 
   name: {
     invalid: {
-      EMPTY: "",
+      empty: "",
       nameOnly: "John",
       surnameOnly: "Doe",
       withNumbers: "John1 Doe2",
@@ -49,9 +53,9 @@ export const data = {
     invalid: {
       empty: "",
       tooShort: "12345",
-      tooLong: "12345654321",
-      nonNumeric: "ABCDEFGHIJ",
-      mixed: "12A45B54C2",
+      //tooLong: "552345654321", - not valid input as there is max restriction 10
+      nonNumeric: "ABcDEfGHIJ",
+      mixed: "1!A45b54@2",
     },
 
     valid: {

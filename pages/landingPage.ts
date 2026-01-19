@@ -43,6 +43,7 @@ export class LandingPage extends BasePage {
   private sectionFormPhone: Locator;
   private phoneInputField: Locator;
   private phoneSubmitRequestButton: Locator;
+  private phoneNumberValidation: Locator
 
   private sectionFormTwo: Locator;
 
@@ -110,9 +111,12 @@ export class LandingPage extends BasePage {
     this.whyInterestedOther = this.sectionFormWhyInterested.getByText("Other", {
       exact: true,
     });
-    this.whyInterestedNextButton = this.sectionFormWhyInterested.getByRole("button", {
+    this.whyInterestedNextButton = this.sectionFormWhyInterested.getByRole(
+      "button",
+      {
         name: "Next",
-      });
+      }
+    );
 
     this.sectionFormTypeOfProperty = this.sectionFormOne.locator(
       'form[name="type_of_property"]'
@@ -129,18 +133,43 @@ export class LandingPage extends BasePage {
       "Mobile Home",
       { exact: true }
     );
-    this.typeOfPropertyNextButton = this.sectionFormTypeOfProperty.getByRole("button", {
+    this.typeOfPropertyNextButton = this.sectionFormTypeOfProperty.getByRole(
+      "button",
+      {
         name: "Next",
+      }
+    );
+
+    this.sectionFormNameAndEmail = this.sectionFormOne.locator(
+      'form[name="name_and_email"]'
+    );
+    this.nameAndEmailfirstNameInput = this.sectionFormNameAndEmail.getByRole(
+      "textbox",
+      { name: "Enter Your Name" }
+    );
+    this.nameAndEmailEmailInput = this.sectionFormNameAndEmail.getByRole(
+      "textbox",
+      { name: "Enter Your Email" }
+    );
+    this.nameAndEmailGoToEstimateButton =
+      this.sectionFormNameAndEmail.getByRole("button", {
+        name: "Go To Estimate",
       });
 
-    this.sectionFormNameAndEmail = this.sectionFormOne.locator('form[name="name_and_email"]');
-    this.nameAndEmailfirstNameInput = this.sectionFormNameAndEmail.getByRole('textbox', {name: 'Enter Your Name'});
-    this.nameAndEmailEmailInput = this.sectionFormNameAndEmail.getByRole('textbox', {name: 'Enter Your Email'});
-    this.nameAndEmailGoToEstimateButton = this.sectionFormNameAndEmail.getByRole('button', { name: 'Go To Estimate' });
-
     this.sectionFormPhone = this.sectionFormOne.locator('form[name="phone"]');
-    this.phoneInputField = this.sectionFormPhone.getByRole('textbox', {name: '(XXX)XXX-XXXX'});
-    this.phoneSubmitRequestButton = this.sectionFormPhone.getByRole('button', { name: 'Submit Your Request' });
+    this.phoneInputField = this.sectionFormPhone.getByRole("textbox", {
+      name: "(XXX)XXX-XXXX",
+    });
+    this.phoneSubmitRequestButton = this.sectionFormPhone.getByRole("button", {
+      name: "Submit Your Request",
+    });
+    this.phoneNumberValidation = this.sectionFormPhone
+    .locator(".helpBlock", { hasText: "Wrong phone number." })
+    .or(
+      this.sectionFormPhone.locator(".helpBlock", {
+        hasText: "Enter your phone number.",
+      })
+    );
 
     this.sectionFormTwo = page.locator(".section_form").last();
   }
@@ -198,7 +227,7 @@ export class LandingPage extends BasePage {
   }
 
   async verifySectionFormSorryEmailSent() {
-    await expect.soft(this.sectionFormSorryThankYouText).toBeVisible();
+    await expect(this.sectionFormSorryThankYouText).toBeVisible();
   }
 
   async verifySectionFormWhyInterested() {
@@ -256,10 +285,6 @@ export class LandingPage extends BasePage {
     await this.nameAndEmailGoToEstimateButton.click();
   }
 
-  async nameAndEmailClick() {
-    await this.nameAndEmailGoToEstimateButton.click();
-  }
-
   async verifySectionFormPhone() {
     await expect(this.sectionFormPhone).toBeVisible();
     await expect(this.phoneInputField).toBeVisible();
@@ -272,5 +297,48 @@ export class LandingPage extends BasePage {
 
   async phoneSubmitRequestButtonClick() {
     await this.phoneSubmitRequestButton.click();
+  }
+
+  async verifyPhoneValidation() {
+    await expect.soft(this.phoneNumberValidation).toBeVisible();
+    //console.log(this.phoneNumberValidation.textContent());
+  } 
+
+//   async getEmailValidationMessage(): Promise<string> {
+//     return await this.nameAndEmailEmailInput.evaluate(
+//       (el) => (el as HTMLInputElement).validationMessage
+//     );
+//   }
+
+//   async isEmailFieldValid(): Promise<boolean> {
+//     return await this.nameAndEmailEmailInput.evaluate((el) =>
+//       (el as HTMLInputElement).checkValidity()
+//     );
+//   }
+
+async verifyEmailFieldHTML5Validation() {
+    // 1. Hard assertions for the static attributes
+    await expect(this.nameAndEmailEmailInput).toHaveAttribute("type", "email");
+    await expect(this.nameAndEmailEmailInput).toHaveAttribute("required");
+
+    // 2. Check validity and message in a single execution context
+    const validation = await this.nameAndEmailEmailInput.evaluate((el) => {
+      const input = el as HTMLInputElement;
+      return {
+        isValid: input.reportValidity(),
+        message: input.validationMessage
+      };
+    });
+
+    // 3. Assertions
+    expect(validation.isValid).toBe(false);
+    expect(validation.message).not.toBe("");
+    
+    console.log(`Validation Message: ${validation.message}`);
+}
+
+
+  async verifySectionPhoneFormNotVisible() {
+    await expect.soft(this.sectionFormPhone).not.toBeVisible();
   }
 }
