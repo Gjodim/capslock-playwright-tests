@@ -5,7 +5,7 @@ import { test } from "../fixtures/landingPage.fixture";
 test.describe("Verify fields validation", async () => {
   test(
     "ZIP code validation",
-    { tag: ["@e2e", "@landingPage"] },
+    { tag: ["@e2e", "@landingPage", "@negative"] },
     async ({ landingPage }) => {
       for (const zip of Object.values(data.zipCodes.invalid)) {
         await landingPage.typeInZipField(zip);
@@ -17,7 +17,7 @@ test.describe("Verify fields validation", async () => {
 
   test(
     "Service available email validation",
-    { tag: ["@e2e", "@landingPage"] },
+    { tag: ["@e2e", "@landingPage", "@negative"] },
     async ({ landingPage }) => {
       await landingPage.typeInZipField(
         data.zipCodes.validServiceAvailable.SA_68901
@@ -46,7 +46,7 @@ test.describe("Verify fields validation", async () => {
   // This will fail as the Out of service email does not have HTML5 validation
   test.fixme(
     "Out of service email validation",
-    { tag: ["@e2e", "@landingPage"] },
+    { tag: ["@e2e", "@landingPage", "@negative"] },
     async ({ landingPage }) => {
       await landingPage.typeInZipField(
         data.zipCodes.validOutOfService.OUA_11111
@@ -64,7 +64,7 @@ test.describe("Verify fields validation", async () => {
 
   test(
     "Phone number validation",
-    { tag: ["@e2e", "@landingPage"] },
+    { tag: ["@e2e", "@landingPage", "@negative"] },
     async ({ landingPage, page }) => {
       const thankYouPage = new ThankYouPage(page);
       await landingPage.typeInZipField(
