@@ -213,6 +213,7 @@ On failure, the following artifacts are captured and uploaded:
 - Enhance reusable content (more page objects, component reusing, utils, environment variables)
 - Protect sensitive data (e.g. emails in environment variables)
 - Add custom debug data (e.g. Allure reports)
+- Suggest data-testId for Locators (so we get stable, uniform and unique Selectors)
 - Increase scenario coverage
 - Test parallelization tuning
 - Plus - Other when the framework and context gros...
